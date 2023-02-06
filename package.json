@@ -1,0 +1,67 @@
+{
+    "name": "react-keycloak-js",
+    "private": false,
+    "version": "1.0.3",
+    "license": "MIT",
+    "description": "Keycloak React for javascript adapter",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/lcanavesio/react-keycloak-js.git"
+    },
+    "author": "Lucas Canavesio",
+    "bugs": {
+        "url": "https://github.com/lcanavesio/react-keycloak-js/issues"
+    },
+    "homepage": "https://github.com/lcanavesio/react-keycloak-js#readme",
+    "keywords": [
+        "react",
+        "keycloak",
+        "keycloak-js"
+    ],
+    "main": "dist/index.js",
+    "module": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "prebuild": "npm run clean",
+        "build": "npm run build:cjs",
+        "build:cjs": "tsc -p tsconfig.build.json --module commonjs --outDir dist/ --target es6",
+        "clean": "rimraf -rf ./dist",
+        "format": "prettier --write \"**/*.{json,md,mdx,css,scss,yaml,yml}\"",
+        "lint": "eslint '**/*.{js,jsx,ts,tsx}'",
+        "types-check": "tsc --noEmit"
+    },
+    "engines": {
+        "node": ">=16.15.0",
+        "npm": ">=8"
+    },
+    "files": [
+        "dist"
+    ],
+    "peerDependencies": {
+        "keycloak-js": ">=20.0.3",
+        "react": ">=18.2.0",
+        "react-dom": ">=18.2.0",
+        "typescript": ">=4.9.5"
+    },
+    "peerDependenciesMeta": {
+        "typescript": {
+            "optional": true
+        }
+    },
+    "devDependencies": {
+        "@types/node": "^18.7.18",
+        "@types/react": "18.0.27",
+        "@types/body-parser": "^1.19.2",
+        "eslint": "^8.5.0",
+        "eslint-config-airbnb": "19.0.2",
+        "eslint-config-prettier": "^8.3.0",
+        "eslint-plugin-import": "2.25.3",
+        "eslint-plugin-jsx-a11y": "6.5.1",
+        "eslint-plugin-prettier": "^4.0.0",
+        "eslint-plugin-react": "7.27.1",
+        "eslint-plugin-react-hooks": "^4.3.0",
+        "git-commit-msg-linter": "^4.1.3",
+        "prettier": "^2.6.2",
+        "typescript": "^4.9.5"
+    }
+}

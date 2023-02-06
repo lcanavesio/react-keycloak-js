@@ -1,0 +1,6 @@
+src/spell-checker-worker.js
+src/nspell.min.js
+src/nspell.js
+src/components/expediente/editor/inicializarEditor.tsx
+src/devexpress-richedit
+node_modules
