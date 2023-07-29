@@ -1,7 +1,6 @@
 {
     "name": "react-keycloak-js",
-    "private": false,
-    "version": "1.0.3",
+    "version": "1.0.4",
     "license": "MIT",
     "description": "Keycloak React for javascript adapter",
     "repository": {
@@ -38,10 +37,7 @@
         "dist"
     ],
     "peerDependencies": {
-        "keycloak-js": ">=20.0.3",
-        "react": ">=18.2.0",
-        "react-dom": ">=18.2.0",
-        "typescript": ">=4.9.5"
+        "keycloak-js": ">=21.1.2"
     },
     "peerDependenciesMeta": {
         "typescript": {
@@ -49,6 +45,8 @@
         }
     },
     "devDependencies": {
+        "react": "^18.0.6",
+        "react-dom": "^18.0.6",
         "@types/node": "^18.7.18",
         "@types/react": "18.0.27",
         "@types/body-parser": "^1.19.2",

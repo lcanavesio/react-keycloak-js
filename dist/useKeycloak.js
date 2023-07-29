@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -8,6 +17,19 @@ const jsx_runtime_1 = require("react/jsx-runtime");
 const keycloak_js_1 = __importDefault(require("keycloak-js"));
 const react_1 = require("react");
 const KeycloakContext = (0, react_1.createContext)(undefined);
+function initializeKeycloak(keycloakConfig, initOptions) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const keycloak = new keycloak_js_1.default(keycloakConfig);
+        let authenticated = false;
+        try {
+            authenticated = yield keycloak.init(initOptions);
+        }
+        catch (error) {
+            console.error('Error al inicializar Keycloak:', error);
+        }
+        return { keycloak, authenticated };
+    });
+}
 const KeycloakProvider = (props) => {
     const { keycloakConfig, initOptions } = props;
     const didLogRef = (0, react_1.useRef)(false);
@@ -16,13 +38,17 @@ const KeycloakProvider = (props) => {
     (0, react_1.useEffect)(() => {
         if (didLogRef.current === false) {
             didLogRef.current = true;
-            const keycloak = new keycloak_js_1.default(keycloakConfig);
-            keycloak.init(initOptions).then(authenticated => {
-                setKeycloak(keycloak);
-                setAuthenticated(authenticated);
-            });
+            if (keycloak && !keycloak.isTokenExpired()) {
+                setAuthenticated(true);
+            }
+            else {
+                initializeKeycloak(keycloakConfig, initOptions).then(({ keycloak, authenticated }) => {
+                    setKeycloak(keycloak);
+                    setAuthenticated(authenticated);
+                });
+            }
         }
-    }, [keycloakConfig, keycloak, initOptions, setAuthenticated, setKeycloak]);
+    }, [keycloakConfig, initOptions]);
     const valor = (0, react_1.useMemo)(() => ({
         keycloak,
         authenticated

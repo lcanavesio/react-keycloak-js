@@ -30,7 +30,7 @@ const App = () => (
 
 # You can use hook useKeycloak()
 
-const { authenticated, keycloak } = useKeycloak();
+const { keycloak, authenticated, error, isTokenExpired } = useKeycloak();
 
 ```
 
