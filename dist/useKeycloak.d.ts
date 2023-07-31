@@ -9,7 +9,5 @@ export declare const KeycloakProvider: React.FunctionComponent<IKeycloakProvider
 export declare function useKeycloak(): {
     keycloak: Keycloak | undefined;
     authenticated: boolean;
-    error: string | null;
-    isTokenExpired: (idTokenParsed: any) => boolean;
 };
 export {};
