@@ -17,12 +17,12 @@ const KeycloakProvider = (props) => {
         if (didLogRef.current === false) {
             didLogRef.current = true;
             const keycloak = new keycloak_js_1.default(keycloakConfig);
-            keycloak.init(initOptions).then(authenticated => {
+            keycloak.init(initOptions).then((authenticated) => {
                 setKeycloak(keycloak);
                 setAuthenticated(authenticated);
             });
         }
-    }, [keycloakConfig, initOptions]);
+    }, [keycloakConfig, keycloak, initOptions, setAuthenticated, setKeycloak]);
     const valor = (0, react_1.useMemo)(() => ({
         keycloak,
         authenticated

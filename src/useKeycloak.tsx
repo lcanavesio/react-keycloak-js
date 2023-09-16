@@ -23,12 +23,12 @@ export const KeycloakProvider: React.FunctionComponent<IKeycloakProvider> = (pro
         if (didLogRef.current === false) {
             didLogRef.current = true;
             const keycloak = new Keycloak(keycloakConfig);
-            keycloak.init(initOptions).then(authenticated => {
+            keycloak.init(initOptions).then((authenticated) => {
                 setKeycloak(keycloak);
                 setAuthenticated(authenticated);
             });
         }
-    }, [keycloakConfig, initOptions]);
+    }, [keycloakConfig, keycloak, initOptions, setAuthenticated, setKeycloak]);
 
     const valor = useMemo(
         () => ({
