@@ -1,6 +1,6 @@
 {
     "name": "react-keycloak-js",
-    "version": "1.0.7",
+    "version": "1.0.8",
     "license": "MIT",
     "description": "Keycloak React for javascript adapter",
     "repository": {
