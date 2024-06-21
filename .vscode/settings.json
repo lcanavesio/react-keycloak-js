@@ -22,8 +22,8 @@
     ],
     "eslint.format.enable": true,
     "editor.codeActionsOnSave": {
-      "source.fixAll.eslint": true,
-      "source.fixAll": true
+      "source.fixAll.eslint": "explicit",
+      "source.fixAll": "explicit"
     },
     "cSpell.words": [
       "algolia",
@@ -39,4 +39,3 @@
       { "directory": "packages/eslint-config-custom", "changeProcessCWD": true }
     ]
   }
-  

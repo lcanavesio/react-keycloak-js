@@ -4,7 +4,12 @@ import React, { createContext, useContext, useEffect, useMemo, useRef, useState 
 const KeycloakContext = createContext<{
     keycloak: Keycloak | undefined;
     authenticated: boolean;
-}>(undefined as any);
+    loading: boolean;
+}>({
+    keycloak: undefined,
+    authenticated: false,
+    loading: true
+});
 
 interface IKeycloakProvider {
     keycloakConfig: Keycloak.KeycloakConfig;
@@ -17,25 +22,34 @@ export const KeycloakProvider: React.FunctionComponent<IKeycloakProvider> = (pro
     const didLogRef = useRef(false);
     const [keycloak, setKeycloak] = useState<Keycloak>();
     const [authenticated, setAuthenticated] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        //NOTE React18 problem with ReactStrictMode
         if (didLogRef.current === false) {
             didLogRef.current = true;
-            const keycloak = new Keycloak(keycloakConfig);
-            keycloak.init(initOptions).then((authenticated) => {
-                setKeycloak(keycloak);
-                setAuthenticated(authenticated);
-            });
+            const keycloakInstance = new Keycloak(keycloakConfig);
+            keycloakInstance
+                .init(initOptions)
+                .then((authenticated) => {
+                    setKeycloak(keycloakInstance);
+                    setAuthenticated(authenticated);
+                })
+                .catch((error) => {
+                    console.error('Failed to initialize Keycloak:', error);
+                })
+                .finally(() => {
+                    setLoading(false);
+                });
         }
-    }, [keycloakConfig, keycloak, initOptions, setAuthenticated, setKeycloak]);
+    }, []);
 
     const valor = useMemo(
         () => ({
             keycloak,
-            authenticated
+            authenticated,
+            loading
         }),
-        [keycloak, authenticated]
+        [keycloak, authenticated, loading]
     );
 
     return <KeycloakContext.Provider value={valor} {...props} />;
