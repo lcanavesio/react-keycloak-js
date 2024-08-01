@@ -1,15 +1,37 @@
 import Keycloak, { KeycloakInitOptions } from 'keycloak-js';
-import React, { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useRef, useReducer, useCallback } from 'react';
 
-const KeycloakContext = createContext<{
+type State = {
     keycloak: Keycloak | undefined;
     authenticated: boolean;
     loading: boolean;
-}>({
+};
+
+type Action =
+    | { type: 'SET_KEYCLOAK'; payload: Keycloak }
+    | { type: 'SET_AUTHENTICATED'; payload: boolean }
+    | { type: 'SET_LOADING'; payload: boolean };
+
+const reducer = (state: State, action: Action): State => {
+    switch (action.type) {
+        case 'SET_KEYCLOAK':
+            return { ...state, keycloak: action.payload };
+        case 'SET_AUTHENTICATED':
+            return { ...state, authenticated: action.payload };
+        case 'SET_LOADING':
+            return { ...state, loading: action.payload };
+        default:
+            return state;
+    }
+};
+
+const initialContextValue = {
     keycloak: undefined,
     authenticated: false,
     loading: true
-});
+};
+
+const KeycloakContext = createContext<State>(initialContextValue);
 
 interface IKeycloakProvider {
     keycloakConfig: Keycloak.KeycloakConfig;
@@ -18,41 +40,36 @@ interface IKeycloakProvider {
 }
 
 export const KeycloakProvider: React.FunctionComponent<IKeycloakProvider> = (props: IKeycloakProvider) => {
-    const { keycloakConfig, initOptions } = props;
+    const { keycloakConfig, initOptions, children } = props;
     const didLogRef = useRef(false);
-    const [keycloak, setKeycloak] = useState<Keycloak>();
-    const [authenticated, setAuthenticated] = useState(false);
-    const [loading, setLoading] = useState(true);
+    const [state, dispatch] = useReducer(reducer, initialContextValue);
+
+    const initializeKeycloak = useCallback(() => {
+        const keycloakInstance = new Keycloak(keycloakConfig);
+        keycloakInstance
+            .init(initOptions)
+            .then((authenticated) => {
+                dispatch({ type: 'SET_KEYCLOAK', payload: keycloakInstance });
+                dispatch({ type: 'SET_AUTHENTICATED', payload: authenticated });
+            })
+            .catch((error) => {
+                console.error('Failed to initialize Keycloak:', error);
+            })
+            .finally(() => {
+                dispatch({ type: 'SET_LOADING', payload: false });
+            });
+    }, [keycloakConfig, initOptions]);
 
     useEffect(() => {
-        if (didLogRef.current === false) {
+        if (!didLogRef.current) {
             didLogRef.current = true;
-            const keycloakInstance = new Keycloak(keycloakConfig);
-            keycloakInstance
-                .init(initOptions)
-                .then((authenticated) => {
-                    setKeycloak(keycloakInstance);
-                    setAuthenticated(authenticated);
-                })
-                .catch((error) => {
-                    console.error('Failed to initialize Keycloak:', error);
-                })
-                .finally(() => {
-                    setLoading(false);
-                });
+            initializeKeycloak();
         }
-    }, []);
+    }, [initializeKeycloak]);
 
-    const valor = useMemo(
-        () => ({
-            keycloak,
-            authenticated,
-            loading
-        }),
-        [keycloak, authenticated, loading]
-    );
+    const contextValue = useMemo(() => state, [state]);
 
-    return <KeycloakContext.Provider value={valor} {...props} />;
+    return <KeycloakContext.Provider value={contextValue}>{children}</KeycloakContext.Provider>;
 };
 
 export function useKeycloak() {
