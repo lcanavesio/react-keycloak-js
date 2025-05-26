@@ -1,6 +1,6 @@
 {
     "name": "react-keycloak-js",
-    "version": "1.0.10",
+    "version": "1.1.0",
     "license": "MIT",
     "description": "Keycloak React for javascript adapter",
     "repository": {
@@ -37,7 +37,7 @@
         "dist"
     ],
     "peerDependencies": {
-        "keycloak-js": ">=22.0.3"
+        "keycloak-js": ">=22.0.3 <27.0.0"
     },
     "peerDependenciesMeta": {
         "typescript": {
@@ -60,6 +60,7 @@
         "eslint-plugin-react-hooks": "^4.6.0",
         "git-commit-msg-linter": "^5.0.4",
         "prettier": "^3.0.3",
-        "typescript": "^5.2.2"
+        "typescript": "^5.2.2",
+        "keycloak-js": "^26.2.0"
     }
 }
